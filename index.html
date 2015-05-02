@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Add-Vehicle</title>
+</head>
+<body>
+
+<?php
+//include('../include/db.php');
+?>
+
+<form action="bus_details_edit2.php" method="POST">
+   	  <p><strong>Register New Franchisees:</strong></p>
+	  
+		Bus Registration:
+		<input type="text" name="bus_reg"  /> <br /> &nbsp;
+		
+
+
+		<!--Manufacturer: 
+    	  <input type="text" name="manufacture" /> <br />&nbsp; <br /> -->  	    
+		
+		<p id="choosetype">
+ <div>
+     Manufacturer:
+ </div>
+		<select name="manufacturer" id="manufacturer">
+     <option value="">All Buses</option>
+     <option value="Isuzu">Isuzu</option>
+     <option value="Mitsubishi">Mitsubishi</option>
+     <option value="Hino">Hino</option>
+     <option value="Nissan-Diesel">Nissan-Diesel</option>
+     <option value="Hyundai">Hyundai</option>
+ </select>
+ <div>
+  Model:
+ </div>    
+ <select name="model" id="model">
+ <!--Isuzu Selection-->
+     <option  class="sub-Isuzu">NKR (26-seater)</option>
+     <option  class="sub-Isuzu">NPR (29-seater)</option>
+     <option  class="sub-Isuzu">NQR (33-seater)</option>
+     <option  class="sub-Isuzu">NQR-MAX (37-seater)</option>
+	 <option  class="sub-Isuzu">FRR (42/51-seater)</option>
+ <!--Mitsubishi Selection-->
+     <option  class="sub-Mitsubishi">Canter (29/33-seater)</option>
+     <option  class="sub-Mitsubishi">FH-215 (42/51-seater)</option>
+     <option  class="sub-Mitsubishi">Fuso</option>
+ <!--Hino Selection-->    
+     <option  class="sub-Hino">300 (29/33-seater)</option>
+     <option  class="sub-Hino">500 (42/51-seater)</option>
+ <!--Nissan Diesel Selection-->
+     <option  class="sub-Nissan-Diesel">U41 (29/33-seater)</option>
+     <option  class="sub-Nissan-Diesel">MKB-210 (42/51-seater)</option>
+<!--Hyundai Selection-->     
+     <option  class="sub-Hyundai">29-seater</option>
+     <option  class="sub-Hyundai">33-seater</option>
+     
+    </select>
+  <span id="optionstore" style="display:none;"></span>
+</p> 
+Number of Seats:
+			<!--<input type="text" name="no_of_seats" />--> 
+			<select id="no_of_seats" name="no_of_seats">
+					<option value="">Please Select Number of seats</option>
+									  <option>29-seater</option>
+									  <option>33-seater</option>
+									  <option>37-seater</option>
+									  <option>51-seater</option>
+								    </select> 
+			<br  />&nbsp;<br />
+		Body Builder:
+			<!--<input type="text" name="no_of_seats" /> -->
+			<select id="body_builder" name="body_builder">
+					<option value="">Please Select Body Builder</option>
+									  <option>KCI</option><!--Kenya Coaches Industries-->
+									  <option>LSHS</option><!--Labh Singh Haram Singh-->
+									  <option>CFG</option><!--Central Farmers Garage-->
+									  <option>Banbros</option>
+									  <option>Haveer</option>
+									  <option>AM</option><!--Associated Motors-->
+									  <option>KVM</option>
+									  <option>Master</option>
+									  <option>Choda</option>
+								    </select>  <br  />&nbsp;<br />
+		Specifics:
+			<input type="text" name="specifics" /> <br  />&nbsp;<br />
+		Date Of Manufacture: 
+          <input type="text" name="date_of_manuf" /> <br />&nbsp; <br /> 
+		Date Of Purchase: 
+          <input type="text" name="date_of_purch" /> <br />&nbsp; <br />		
+		 <br />&nbsp; <br />               
+    	<p align="center"><br />
+   	      <input type="submit"  value="Register" name="Register"/> &nbsp;&nbsp; 
+   	      <input type="reset" value="Reset" />
+   	      <br /> 
+   	      </p>
+   	</form>
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+<!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> -->
+<script type="text/javascript">
+$(document).ready(function() {
+
+    $('#manufacturer').on("change", function() {
+        var cattype = $(this).val();
+        optionswitch(cattype);
+    });
+
+});
+
+function optionswitch(myfilter) {
+    //Populate the optionstore if the first time through
+    if ($('#optionstore').text() == "") {
+        $('option[class^="sub-"]').each(function() {
+            var optvalue = $(this).val();
+            var optclass = $(this).prop('class');
+            var opttext = $(this).text();
+            optionlist = $('#optionstore').text() + "@%" + optvalue + "@%" + optclass + "@%" + opttext;
+            $('#optionstore').text(optionlist);
+        });
+    }
+    //delete everything
+    $('option[class^="sub-"]').remove();
+    // put the filtered stuff back
+    populateoption = rewriteoption(myfilter);
+    $('#model').html(populateoption);
+}
+
+function rewriteoption(myfilter) {
+    //rewrite only the filtered stuff back into the option
+    var options = $('#optionstore').text().split('@%');
+    var resultgood = false;
+    var myfilterclass = "sub-" + myfilter;
+    var optionlisting = "";
+    
+    myfilterclass = (myfilter != "")?myfilterclass:"all";
+    //first variable is always the value, second is always the class, third is always the text
+    for (var i = 3; i < options.length; i = i + 3) {
+        if (options[i - 1] == myfilterclass || myfilterclass == "all") {
+            optionlisting = optionlisting + '<option value="' + options[i - 2] + '" class="sub-' + options[i - 1] + '">' + options[i] + '</option>';
+            resultgood = true;
+        }
+    }
+    if (resultgood) {
+        return optionlisting;
+    }
+}
+</script>		
+
+</body>
+</html>
